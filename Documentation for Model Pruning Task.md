@@ -164,29 +164,20 @@ So I'm making the sparsticity for the first layer which is  also the most sensit
 
 
 ![](Aspose.Words.7f2dbd86-571f-41de-a498-6f3d92437937.005.png)
+| Layer Name         | Sparsity |
+|--------------------|----------|
+| conv1.0.weight     | 0.6      |
+| conv2.0.weight     | 0.9      |
+| res1.0.0.weight    | 0.9      |
+| res1.1.0.weight    | 0.9      |
+| conv3.0.weight     | 0.9      |
+| conv4.0.weight     | 0.9      |
+| res2.0.0.weight    | 0.9      |
+| res2.1.0.weight    | 0.9      |
+| classifier.3.weight| 0.9      |
+| classifier.4.weight| 0.9      |
 
-**sparsity\_dict ={**
 
-`    `**'conv1.0.weight': 0.6,**
 
-`    `**'conv2.0.weight': 0.9,**
-
-`    `**'res1.0.0.weight': 0.9,**
-
-`    `**'res1.1.0.weight': 0.9,**
-
-`    `**'conv3.0.weight': 0.9,**
-
-`    `**'conv4.0.weight': 0.9,**
-
-`    `**'res2.0.0.weight': 0.9,**
-
-`    `**'res2.1.0.weight': 0.9,**
-
-`    `**'classifier.3.weight': 0.9,**
-
-`    `**'classifier.4.weight': 0.9**
-
-**}**
 
 ![](Aspose.Words.7f2dbd86-571f-41de-a498-6f3d92437937.006.png)![](Aspose.Words.7f2dbd86-571f-41de-a498-6f3d92437937.007.png)![](Aspose.Words.7f2dbd86-571f-41de-a498-6f3d92437937.008.png)
