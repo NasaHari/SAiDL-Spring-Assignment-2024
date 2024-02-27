@@ -1,11 +1,11 @@
 ﻿
-Documentation for Sparsity and Pruning Assignment
+***Documentation for Sparsity and Pruning Assignment***
 
-Objective:
+**Objective**:
 
 The primary objective of this assignment is to develop a robust training loop for a neural network model using PyTorch, followed by evaluating its performance on a validation dataset. Additionally, the goal includes computing and analyzing the sparsity of the model's parameters. And the affect of pruning on size and accuracy
 
-Implementation Overview:
+**Implementation Overview:**
 
 Data Preparation:
 
@@ -15,7 +15,7 @@ Splitting the dataset into training and validation sets with a ratio of 90:10.
 
 Model Architecture:
 
-Adoption of the Neural network as the base model for this assignment.
+Adoption of the Neural network (custom )**Net10** as the base model for this assignment.
 
 Training Loop:
 
@@ -41,7 +41,7 @@ Evaluation of the trained model on the validation dataset after each epoch to me
 
 Calculation and printing of the accuracy of the model on the validation set.
 
-Sparsity Analysis:
+**Sparsity Analysis:**
 
 Computation of the sparsity of the model parameters using provided functions.
 
@@ -81,64 +81,42 @@ When attempting to load the trained model using torch.load**, a** RuntimeError *
 
 Modify the final fully connected layer to match the number of classes in CIFAR-10 before loading the trained model. This ensures that the model architecture matches the one used during training, resolving the size mismatch error.
 
-**Performance Improvement Strategy:**
 
 **Due to achieving a maximum accuracy of 75% with the VGG16 model after 75 epochs, a decision was made to switch to a different approach using a custom neural network architecture (**Net10**). This architecture, with an increased size of 100 MB compared to the previous 25 MB, achieved a validation accuracy of 90% in just 10 epochs, demonstrating significant performance improvement.and 91.81% in 20 epochs**
 
-**Model Architecture (**Net10):
-
+**Model Architecture (Net10)**:
+```python
 class Net10(ImageClassificationBase):
+    def __init__(self, in_channels, num_classes):
+        super().__init__()
 
-`    `def \_\_init\_\_(self, in\_channels, num\_classes):
+        self.conv1 = conv_block(in_channels, 128)  # Increase channels
+        self.conv2 = conv_block(128, 256, pool=True)  # Increase channels
+        self.res1 = nn.Sequential(conv_block(256, 256), conv_block(256, 256))
 
-`        `super().\_\_init\_\_()
+        self.conv3 = conv_block(256, 512, pool=True)  # Increase channels
+        self.conv4 = conv_block(512, 1024, pool=True)  # Increase channels
+        self.res2 = nn.Sequential(conv_block(1024, 1024), conv_block(1024, 1024))
 
+        self.classifier = nn.Sequential(
+            nn.MaxPool2d(4),
+            nn.Flatten(),
+            nn.Dropout(0.2),
+            nn.Linear(1024, 512),  # Increase neurons
+            nn.Linear(512, num_classes)  # Increase
+        )
 
+    def forward(self, xb):
+        out = self.conv1(xb)
+        out = self.conv2(out)
+        out = self.res1(out) + out
+        out = self.conv3(out)
+        out = self.conv4(out)
+        out = self.res2(out) + out
+        out = self.classifier(out)
+        return out
 
-`        `self.conv1 = conv\_block(in\_channels, 128)  # Increase channels
-
-`        `self.conv2 = conv\_block(128, 256, pool=True)  # Increase channels
-
-`        `self.res1 = nn.Sequential(conv\_block(256, 256), conv\_block(256, 256))
-
-
-
-`        `self.conv3 = conv\_block(256, 512, pool=True)  # Increase channels
-
-`        `self.conv4 = conv\_block(512, 1024, pool=True)  # Increase channels
-
-`        `self.res2 = nn.Sequential(conv\_block(1024, 1024), conv\_block(1024, 1024))
-
-
-
-`        `self.classifier = nn.Sequential(nn.MaxPool2d(4), 
-
-`                                        `nn.Flatten(), 
-
-`                                        `nn.Dropout(0.2),
-
-`                                        `nn.Linear(1024, 512),  # Increase neurons
-
-`                                        `nn.Linear(512, num\_classes))  # Increase
-
-`    `def forward(self, xb):
-
-`        `out = self.conv1(xb)
-
-`        `out = self.conv2(out)
-
-`        `out = self.res1(out) + out
-
-`        `out = self.conv3(out)
-
-`        `out = self.conv4(out)
-
-`        `out = self.res2(out) + out
-
-`        `out = self.classifier(out)
-
-`        `return out
-
+```
 
 
 Training Hyperparameters:
@@ -156,9 +134,9 @@ Training Hyperparameters:
 
 
 
-After which i used mit lab as boiler plate to do sensitivity scan on eac level and determine the s[aprcity i did on the range 0.4 to 1 sparcity other than few layers others didnt show any sensoititvity at all which might mean{have to figure it out} i also found out the paraqmeter determination as more sparcity in layers with highest no of parameters will reduce the model size most {what theorem is this }  hte model after spars and pruning gave **10.27 Mib 10.05%** of dense model size Sparse model has accuracy=0.9162% before fintuning
+After which i used mit lab as boilerplate to do a sensitivity scan on each level and determine the spaprcity I did on the range 0.4 to 1 sparsity other than few layers others didn't show any sensitivity at all which might mean{have to figure it out} i also found out the parameter determination as more sparcity in layers with highest no of parameters will reduce the model size most {what theorem is this }  the model after sparsing and pruning gave **10.27 Mib 10.05%** of dense model size Sparse model has accuracy=0.9162% before finetuning
 
-Sparse model has accuracy=0.9205% after fintuning which  is  higher than dense model as the dese model due to higher training time didnt undergo muc  finetuning but due to reduction in size therefore reduction in training time alloowwed for more finetuning leadin to higher accuacy
+Sparse model has accuracy=0.9205% after finetuning which  is  higher than dense model as the dese model due to higher training time didnt undergo muc  finetuning but due to reduction in size therefore reduction in training time allowed for more finetuning leading to higher accuracy
 
 
 
@@ -174,9 +152,9 @@ Sparse model has accuracy=0.9205% after fintuning which  is  higher than dense m
 
 I can see a overall reduction in density of weights due to  pruning
 
-The sparcity is decided by no  of parameters of each layer and its sensitivity to change in sparcity,From the graphs its found that till 0.9 sparcity most layers are insensitive to change in sparrcity and num of parameters are highest  for  'conv4.0.weigh;;res2.0.0.weight':'res2.1.0.weight
+The sparsity is decided by no  of parameters of each layer and its sensitivity to change in sparsity,From the graphs its found that till 0.9 scarcity most layers are insensitive to change in scarcity and num of parameters are highest  for  'conv4.0.weigh;;res2.0.0.weight':'res2.1.0.weight
 
-So ia m making the sparsticity for the first layer which is  also most sensitive 0.6 and 0.9 for rest
+So I'm making the sparsticity for the first layer which is  also the most sensitive 0.6 and 0.9 for rest
 
 
 #### <a name="_oc3ft3ncx2az"></a>Sensitivity plot
